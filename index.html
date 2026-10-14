@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="description" content="Mouleeshwaran's Game Boy-style interactive portfolio — power on the console, browse About/Resume/Follow/Hire, and play an embedded career-timeline platformer." />
+<!-- ALERT: hardening header. script-src 'self' works cleanly because all
+     JS lives in the external script.js (no inline <script> anywhere);
+     style-src needs 'unsafe-inline' because every Web Component injects
+     its own <style> via innerHTML into its shadow root. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none';" />
+<title>Game Boy Style Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- Full-viewport backdrop: dot-grid + vignette, crossfades with the
+     console's own skin toggle via body[data-skin] (set from script.js). -->
+<div class="bg-layer bg-photo"></div>
+<div class="bg-layer bg-classic"></div>
+<div class="bg-layer bg-vintage"></div>
+
+<div class="page">
+  <!-- Decorative cartridge-label title plaque. Both images are the same
+       content in different skins (only one is visible at a time), so
+       they're marked decorative for screen readers; the page <title>
+       and this meta description carry the real text. -->
+  <div class="title-banner" role="img" aria-label="Game Boy Style Portfolio — Mouleeshwaran">
+    <img class="title-img title-classic" src="title/title-plaque-classic.png" alt="" aria-hidden="true" />
+    <img class="title-img title-vintage" src="title/title-plaque-vintage.png" alt="" aria-hidden="true" />
+  </div>
+  <div class="stage-row">
+    <span class="side-label side-label-left">FLIP SWITCH TO POWER ON</span>
+    <div class="gb-wrap" id="gbWrap">
+      <div class="gb-scale" id="gbScale">
+        <gameboy-console></gameboy-console>
+      </div>
+    </div>
+    <span class="side-label side-label-right">D-PAD / A / B — ARROW KEYS</span>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>

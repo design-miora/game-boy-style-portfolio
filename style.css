@@ -1,0 +1,147 @@
+/* ===== Game Boy Style Portfolio — page shell =====
+   Scope note: this file only styles what sits OUTSIDE the console (page
+   background, title plaque, side labels, responsive scaling wrapper).
+   The console itself — every button, screen, and skin color — lives
+   entirely inside Shadow DOM templates in script.js and is not reachable
+   from here; that's intentional encapsulation, not an oversight. */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden; /* HIGHLIGHT: page is a fixed, non-scrolling viewport by design */
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #14141a;
+  font-family: "Press Start 2P", monospace;
+  padding: 24px;
+  position: relative;
+}
+
+/* Two stacked full-viewport layers (dot-grid + vignette) crossfade
+   between the Classic and Vintage moods as the skin toggle changes.
+   Plain sibling divs (not ::before/::after) so stacking is just DOM
+   order — no z-index needed, nothing to fight with. */
+.bg-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-size: auto, 26px 26px;
+  transition: opacity 0.6s ease;
+}
+
+/* Base layer: a full-strength sunset panorama. The vignette layers on
+   top of it are semi-transparent, so the photo shows through wherever
+   the vignette is lightest (center-top) and fades out toward the edges. */
+.bg-photo {
+  opacity: 1;
+  background-image: url("backgrounds/bg-2.png");
+  background-size: cover;
+  background-position: center;
+}
+
+.bg-classic {
+  opacity: 1;
+  background-image:
+    radial-gradient(circle at 50% 15%, rgba(58, 58, 74, 0.87), rgba(20, 20, 26, 0.96) 75%),
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.14) 1.3px, transparent 1.4px);
+}
+
+.bg-vintage {
+  opacity: 0;
+  background-image:
+    radial-gradient(circle at 50% 15%, rgba(74, 51, 46, 0.87), rgba(23, 19, 16, 0.96) 75%),
+    radial-gradient(circle at center, rgba(255, 255, 255, 0.14) 1.3px, transparent 1.4px);
+}
+
+body[data-skin="vintage"] .bg-classic { opacity: 0; }
+body[data-skin="vintage"] .bg-vintage { opacity: 1; }
+
+/* ---------- Page layout: title plaque + console + side labels ---------- */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  position: relative;
+}
+
+/* Cartridge-label title plaque. Two crossfading PNGs (Classic/Vintage,
+   same content) sit stacked absolute-inset; only opacity toggles. */
+.title-banner {
+  position: relative;
+  width: min(85vw, 460px);
+  aspect-ratio: 4.03 / 1;
+  flex-shrink: 0;
+}
+
+.title-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: opacity 0.6s ease;
+}
+
+.title-classic { opacity: 1; }
+.title-vintage { opacity: 0; }
+
+body[data-skin="vintage"] .title-classic { opacity: 0; }
+body[data-skin="vintage"] .title-vintage { opacity: 1; }
+
+/* HIGHLIGHT: gb-wrap/gb-scale is the responsive-scaling pair driven by
+   fitScale() in script.js — gb-scale is transformed with scale(), and
+   gb-wrap's own width/height are kept in sync so surrounding flex layout
+   (.stage-row) reserves the correct box instead of clipping/overflowing. */
+.gb-wrap {
+  position: relative;
+  transition: width 0.15s ease, height 0.15s ease;
+}
+
+.gb-scale {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 380px;
+  height: 625px;
+  transform-origin: top left;
+}
+
+.stage-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.side-label {
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  color: #7a7a86;
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  line-height: 1.8;
+  white-space: nowrap;
+}
+
+@media (max-width: 680px) {
+  .stage-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .side-label {
+    writing-mode: horizontal-tb;
+    text-align: center;
+  }
+}
+
